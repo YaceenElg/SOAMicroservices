@@ -1,0 +1,717 @@
+@{
+    ViewData["Title"] = "Launch Game";
+    var gameState = ViewBag.GameState as FRONT.Services.GameStateResponse;
+    var gameUrl = ViewBag.GameUrl as string;
+    var gameId = ViewBag.GameId as int?;
+    var error = ViewBag.Error as string;
+}
+
+<div class="container mt-4">
+    <div class="mb-4 d-flex justify-content-between align-items-center">
+        <a asp-action="GameDetails" asp-route-id="@gameId" class="btn btn-secondary">
+            Back to Game Details
+        </a>
+        <div>
+            <span class="badge bg-info text-white me-2">Score: <span id="score">@(gameState?.Score ?? 0)</span></span>
+            <span class="badge bg-primary text-white">Level: <span id="level">@(gameState?.Level ?? 1)</span></span>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(error))
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <h5 class="alert-heading">Error</h5>
+            <p>@error</p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (gameState == null)
+    {
+        <div class="alert alert-warning">
+            <h5>Game Not Available</h5>
+            <p>The game could not be initialized. Please try again or contact support.</p>
+            <p><strong>GameId:</strong> @gameId, <strong>GameUrl:</strong> @gameUrl</p>
+            <a asp-action="GameDetails" asp-route-id="@gameId" class="btn btn-primary mt-2">Go Back to Game Details</a>
+        </div>
+    }
+
+    @if (gameState != null)
+    {
+        <div class="card shadow-lg border-0">
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center py-3">
+                <h3 class="mb-0">
+                    <span id="gameTypeHeader">@(gameState?.GameType?.ToUpper() ?? "GAME")</span> 
+                    <span class="badge bg-light text-dark ms-2" id="gameStatusHeader">@(gameState?.Status ?? "Loading")</span>
+                </h3>
+                <div>
+                    <span class="badge bg-light text-dark">Score: <span id="scoreHeader">@(gameState?.Score ?? 0)</span></span>
+                    <span class="badge bg-light text-dark ms-2">Level: <span id="levelHeader">@(gameState?.Level ?? 1)</span></span>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <div id="gameContainer" style="border: 2px solid #28a745; border-radius: 8px; padding: 30px; min-height: 500px; background: #f8f9fa; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);">
+                    <div id="gameContent">
+                        <div class="text-center py-5">
+                            <div class="spinner-border text-success" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-3 text-muted">Initializing game...</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 text-center">
+                    <button class="btn btn-warning btn-lg px-4" onclick="window.resetGame(); return false;">
+                        Reset Game
+                    </button>
+                </div>
+                <div class="mt-3 text-center">
+                    <p class="text-muted mb-2">
+                        Game state updates automatically every second.
+                    </p>
+                    <p id="gameStatus" class="text-info fw-bold">
+                        Status: <span id="statusText">@(gameState.Status ?? "Loading")</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    @{
+        string gameStateJson = "null";
+        if (gameState != null)
+        {
+            try
+            {
+                // Ensure GameType is not null or empty
+                var gameTypeValue = gameState.GameType;
+                if (string.IsNullOrEmpty(gameTypeValue))
+                {
+                    // Try to get from ViewBag or use default
+                    gameTypeValue = ViewBag.RequestedGameType as string ?? "connectfour";
+                    Console.WriteLine($"[LaunchGame View] GameType was empty, using fallback: '{gameTypeValue}'");
+                }
+                
+                gameStateJson = System.Text.Json.JsonSerializer.Serialize(new { 
+                    GameId = gameState.GameId, 
+                    GameType = gameTypeValue, 
+                    Status = gameState.Status ?? "Playing",
+                    Score = gameState.Score,
+                    Level = gameState.Level,
+                    GameDataJson = gameState.GameDataJson ?? "{}"
+                });
+                
+                Console.WriteLine($"[LaunchGame View] Serialized gameState - GameId={gameState.GameId}, GameType='{gameTypeValue}', Status='{gameState.Status}'");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[LaunchGame View] Error serializing gameState: {ex.Message}");
+                Console.WriteLine($"[LaunchGame View] StackTrace: {ex.StackTrace}");
+                gameStateJson = "null";
+            }
+        }
+        else
+        {
+            Console.WriteLine($"[LaunchGame View] ERROR: gameState is null!");
+        }
+    }
+    
+    let gameState = null;
+    try {
+        gameState = @Html.Raw(gameStateJson);
+        console.log('GameState loaded:', gameState);
+    } catch (e) {
+        console.error('Error parsing gameState:', e);
+        gameState = null;
+    }
+    
+    const playerId = @(int.TryParse(Context.Session.GetString("UserId"), out var uid) ? uid : 0);
+    console.log('PlayerId:', playerId);
+    
+    let currentGameState = gameState;
+    let gameLoopInterval;
+    let initialGameId = null; // Store the initial gameId to preserve it
+
+    // Make sendAction globally accessible
+    window.sendAction = function(action) {
+        console.log('==========================================');
+        console.log('sendAction: CALLED with action =', action);
+        console.log('sendAction: currentGameState =', currentGameState);
+        console.log('sendAction: initialGameId =', initialGameId);
+        console.log('sendAction: playerId =', playerId);
+        
+        // Allow reset action even if game is over
+        if (action !== 'reset' && (!currentGameState || currentGameState.Status === 'GameOver' || currentGameState.Status === 'Won')) {
+            console.warn('sendAction: Cannot send action - game state invalid or game ended');
+            console.log('sendAction: currentGameState.Status =', currentGameState?.Status);
+            return;
+        }
+        
+        // For reset, allow it even if gameState seems invalid
+        if (action === 'reset' && !currentGameState) {
+            console.warn('sendAction: Reset called but currentGameState is null, trying anyway with initialGameId');
+            if (!initialGameId || initialGameId <= 0) {
+                console.error('sendAction: Cannot reset - no valid gameId available');
+                alert('Error: Cannot reset game. Please refresh the page.');
+                return;
+            }
+        }
+
+        // Validate gameId before sending - use initialGameId as fallback
+        let gameId = currentGameState?.GameId;
+        if (!gameId || gameId <= 0) {
+            // Try to use the stored initialGameId as fallback
+            if (initialGameId && initialGameId > 0) {
+                console.warn('sendAction: currentGameState.GameId is invalid, using initialGameId:', initialGameId);
+                gameId = initialGameId;
+                // Update currentGameState with the correct gameId
+                if (currentGameState) {
+                    currentGameState.GameId = gameId;
+                }
+            } else {
+                console.error('sendAction: ERROR - Invalid gameId:', gameId, 'initialGameId:', initialGameId, 'currentGameState:', currentGameState);
+                alert('Error: Invalid game ID. Please refresh the page and try again.');
+                return;
+            }
+        }
+
+        console.log('sendAction: Sending action', action, 'for gameId:', gameId, 'playerId:', playerId);
+
+        fetch('/Home/PlayGameAction', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                gameId: gameId,
+                action: action,
+                playerId: playerId
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Check for errors in response
+            if (data.error) {
+                console.error('sendAction: Server returned error:', data.error);
+                alert('Error: ' + data.error);
+                return;
+            }
+
+            // Validate that we got a valid gameId back - use fallbacks if needed
+            // Handle both camelCase and PascalCase property names
+            let responseGameId = data.GameId || data.gameId;
+            if (!responseGameId || responseGameId <= 0) {
+                // Try to use the gameId we sent, or initialGameId
+                if (gameId && gameId > 0) {
+                    console.warn('sendAction: Response has invalid GameId, using sent gameId:', gameId);
+                    responseGameId = gameId;
+                } else if (initialGameId && initialGameId > 0) {
+                    console.warn('sendAction: Response has invalid GameId, using initialGameId:', initialGameId);
+                    responseGameId = initialGameId;
+                } else {
+                    console.error('sendAction: ERROR - Invalid gameId in response and no fallback available:', data.GameId);
+                    console.error('sendAction: Full response data:', data);
+                    console.error('sendAction: gameId sent:', gameId, 'initialGameId:', initialGameId);
+                    alert('Error: Invalid game ID received from server. Please refresh the page.');
+                    return;
+                }
+            }
+
+            // Update initialGameId if we got a valid gameId
+            if (responseGameId > 0 && (!initialGameId || initialGameId <= 0)) {
+                initialGameId = responseGameId;
+                console.log('sendAction: Updated initialGameId to:', initialGameId);
+            }
+
+            console.log('sendAction: Success - received gameState, using GameId:', responseGameId);
+            console.log('sendAction: Full response data:', data);
+            
+            // Handle both camelCase and PascalCase property names
+            const status = data.Status || data.status;
+            const gameType = data.GameType || data.gameType;
+            const score = data.Score !== undefined ? data.Score : (data.score !== undefined ? data.score : 0);
+            const level = data.Level !== undefined ? data.Level : (data.level !== undefined ? data.level : 1);
+            const gameDataJson = data.GameDataJson || data.gameDataJson;
+            
+            console.log('sendAction: Received Status:', status);
+            console.log('sendAction: Received GameType:', gameType);
+            console.log('sendAction: Received Score:', score);
+            console.log('sendAction: Received Level:', level);
+            console.log('sendAction: Received GameDataJson:', gameDataJson);
+            
+            // Preserve the gameId and all other fields in the response
+            currentGameState = {
+                GameId: responseGameId,
+                GameType: gameType || currentGameState?.GameType || 'connectfour',
+                Status: status || 'Playing',
+                Score: score,
+                Level: level,
+                GameDataJson: gameDataJson || currentGameState?.GameDataJson || '{}'
+            };
+            
+            console.log('sendAction: Updated currentGameState - Status:', currentGameState.Status, 'GameType:', currentGameState.GameType);
+            
+            updateGameDisplay();
+        })
+        .catch(error => {
+            console.error('sendAction: Error:', error);
+            alert('Error sending action: ' + error.message);
+        });
+    };
+    
+    // Also define it locally for backward compatibility
+    function sendAction(action) {
+        return window.sendAction(action);
+    }
+
+    function resetGame() {
+        console.log('==========================================');
+        console.log('resetGame: Called');
+        console.log('resetGame: currentGameState =', currentGameState);
+        console.log('resetGame: window.sendAction exists?', typeof window.sendAction);
+        
+        if (!currentGameState) {
+            console.error('resetGame: currentGameState is null!');
+            alert('Error: Game state not available. Please refresh the page.');
+            return;
+        }
+        
+        if (window.sendAction) {
+            console.log('resetGame: Calling window.sendAction("reset")');
+            window.sendAction('reset');
+        } else {
+            console.error('resetGame: window.sendAction is not available!');
+            alert('Error: Game action function not available. Please refresh the page.');
+        }
+    }
+    
+    // Make resetGame globally accessible
+    window.resetGame = resetGame;
+
+    function updateGameDisplay() {
+        if (!currentGameState) {
+            console.error('updateGameDisplay: currentGameState is null');
+            return;
+        }
+
+        console.log('updateGameDisplay: currentGameState =', currentGameState);
+        console.log('updateGameDisplay: GameType =', currentGameState.GameType);
+
+        // Update score and level in multiple places
+        const score = currentGameState.Score || 0;
+        const level = currentGameState.Level || 1;
+        document.getElementById('score').textContent = score;
+        document.getElementById('level').textContent = level;
+        const scoreHeader = document.getElementById('scoreHeader');
+        const levelHeader = document.getElementById('levelHeader');
+        if (scoreHeader) scoreHeader.textContent = score;
+        if (levelHeader) levelHeader.textContent = level;
+        
+        // Ensure Status is never empty - default to "Playing" if missing
+        const status = currentGameState.Status && currentGameState.Status.trim() !== '' 
+            ? currentGameState.Status 
+            : 'Playing';
+        document.getElementById('statusText').textContent = status;
+        document.getElementById('gameStatusHeader').textContent = status;
+        
+        console.log('updateGameDisplay: Status set to:', status, 'from currentGameState.Status:', currentGameState.Status);
+        
+        // Update game type header
+        const gameTypeHeader = document.getElementById('gameTypeHeader');
+        if (gameTypeHeader && currentGameState.GameType) {
+            gameTypeHeader.textContent = currentGameState.GameType.toUpperCase();
+        }
+
+        if (currentGameState.Status === 'GameOver' || currentGameState.Status === 'Won') {
+            clearInterval(gameLoopInterval);
+            if (currentGameState.Status === 'Won') {
+                alert('You Won! Final Score: ' + currentGameState.Score);
+            } else {
+                alert('Game Over! Final Score: ' + currentGameState.Score);
+            }
+        } else {
+            renderGame();
+        }
+    }
+
+    function renderGame() {
+        const container = document.getElementById('gameContent');
+        if (!container || !currentGameState) {
+            console.error('renderGame: container or currentGameState is null', { container, currentGameState });
+            return;
+        }
+
+        try {
+            console.log('renderGame: currentGameState =', currentGameState);
+            console.log('renderGame: GameType =', currentGameState.GameType);
+            console.log('renderGame: GameDataJson =', currentGameState.GameDataJson);
+            console.log('renderGame: GameDataJson type =', typeof currentGameState.GameDataJson);
+            
+            // Parse GameDataJson - handle both string and object
+            let gameData = {};
+            if (typeof currentGameState.GameDataJson === 'string') {
+                try {
+                    gameData = JSON.parse(currentGameState.GameDataJson || '{}');
+                } catch (parseError) {
+                    console.error('renderGame: Error parsing GameDataJson:', parseError);
+                    console.error('renderGame: GameDataJson value:', currentGameState.GameDataJson);
+                    gameData = {};
+                }
+            } else if (typeof currentGameState.GameDataJson === 'object' && currentGameState.GameDataJson !== null) {
+                gameData = currentGameState.GameDataJson;
+            }
+            
+            console.log('renderGame: parsed gameData =', gameData);
+            
+            // Ensure GameType is always defined - use fallback if needed
+            let gameType = (currentGameState.GameType || '').toLowerCase().trim();
+            if (!gameType || gameType === 'undefined' || gameType === 'null') {
+                // Try to extract from gameUrl if available
+                const urlParams = new URLSearchParams(window.location.search);
+                const gameUrl = urlParams.get('gameUrl') || '';
+                if (gameUrl) {
+                    const urlParts = gameUrl.split('/');
+                    const gameName = urlParts[urlParts.length - 1]?.toLowerCase().trim() || '';
+                    if (gameName === 'connectfour' || gameName === 'connect-four') gameType = 'connectfour';
+                    else if (gameName === 'higherlower' || gameName === 'higher-lower') gameType = 'higherlower';
+                    else if (gameName === 'memorymatch' || gameName === 'memory-match') gameType = 'memorymatch';
+                    else gameType = gameName || 'connectfour';
+                } else {
+                    gameType = 'connectfour'; // Final fallback
+                }
+                console.warn('renderGame: GameType was empty/undefined, using fallback:', gameType);
+                // Update currentGameState with the correct GameType
+                currentGameState.GameType = gameType;
+            }
+            
+            console.log('renderGame: parsed gameType =', gameType);
+            console.log('renderGame: gameData =', gameData);
+
+            console.log('renderGame: About to render game type:', gameType);
+            
+            if (gameType === 'connectfour') {
+                console.log('renderGame: Rendering ConnectFour');
+                renderConnectFour(container, gameData, currentGameState);
+            } else if (gameType === 'higherlower') {
+                console.log('renderGame: Rendering HigherLower');
+                renderHigherLower(container, gameData, currentGameState);
+            } else if (gameType === 'memorymatch') {
+                console.log('renderGame: Rendering MemoryMatch');
+                renderMemoryMatch(container, gameData, currentGameState);
+            } else {
+                console.error('renderGame: Unknown game type:', gameType, 'Full state:', currentGameState);
+                container.innerHTML = '<div class="alert alert-warning">Unknown game type: "' + gameType + '" (GameType: "' + currentGameState.GameType + '")</div>';
+            }
+            
+            console.log('renderGame: Render complete, container.innerHTML length:', container.innerHTML.length);
+        } catch (error) {
+            console.error('Error rendering game:', error);
+            container.innerHTML = '<div class="alert alert-danger">Error rendering game: ' + error.message + '</div>';
+        }
+    }
+
+    function renderConnectFour(container, gameData, state) {
+        const board = gameData.board || [];
+        const currentPlayer = gameData.currentPlayer || 'R';
+        const moves = gameData.moves || 0;
+        const lastMoveCol = (gameData.lastMoveCol !== undefined) ? gameData.lastMoveCol : -1;
+
+        let html = '<div class="d-flex flex-column align-items-center gap-3">';
+        html += '<div class="text-center">';
+        html += '<div class="fw-bold">Connect Four</div>';
+        html += '<div class="text-muted">Current: <strong>' + currentPlayer + '</strong> • Moves: ' + moves + '</div>';
+        html += '</div>';
+
+        html += '<div class="d-flex gap-2 flex-wrap justify-content-center">';
+        for (let c = 0; c < 7; c++) {
+            const isLast = (c === lastMoveCol);
+            html += '<button class="btn btn-sm ' + (isLast ? 'btn-success' : 'btn-outline-success') + '" ';
+            html += 'onclick="window.sendAction(\'drop_' + c + '\'); return false;">Drop ' + (c + 1) + '</button>';
+        }
+        html += '</div>';
+
+        html += '<div class="connect4-grid mt-2" style="display:grid;grid-template-columns:repeat(7,48px);gap:8px;padding:14px;background:#0b1b2b;border-radius:14px;">';
+        for (let r = 0; r < 6; r++) {
+            for (let c = 0; c < 7; c++) {
+                const v = board[r * 7 + c] || '';
+                const color = v === 'R' ? '#ef4444' : (v === 'Y' ? '#f59e0b' : '#e5e7eb');
+                html += '<div style="width:48px;height:48px;border-radius:999px;background:' + color + ';box-shadow: inset 0 2px 6px rgba(0,0,0,.35);"></div>';
+            }
+        }
+        html += '</div></div>';
+
+        container.innerHTML = html;
+    }
+
+    function renderHigherLower(container, gameData, state) {
+        const current = gameData.current ?? 1;
+        const next = gameData.next ?? 1;
+        const revealed = !!gameData.revealed;
+        const streak = gameData.streak ?? 0;
+        const round = gameData.round ?? 1;
+        const message = gameData.message || '';
+
+        let html = '<div class="d-flex flex-column align-items-center gap-3">';
+        html += '<div class="text-center">';
+        html += '<div class="fw-bold">Higher / Lower</div>';
+        html += '<div class="text-muted">Round ' + round + ' • Streak ' + streak + '</div>';
+        html += '</div>';
+
+        if (message) {
+            html += '<div class="alert alert-info py-2 px-3 text-center" style="max-width:520px;">' + message + '</div>';
+        }
+
+        html += '<div class="d-flex gap-3 align-items-center">';
+        html += '<div class="card p-3 text-center" style="min-width:160px;"><div class="text-muted">Current</div><div class="display-6 mb-0">' + current + '</div></div>';
+        html += '<div class="card p-3 text-center" style="min-width:160px;"><div class="text-muted">Next</div><div class="display-6 mb-0">' + (revealed ? next : '?') + '</div></div>';
+        html += '</div>';
+
+        html += '<div class="d-flex gap-2 mt-2">';
+        html += '<button class="btn btn-primary" onclick="window.sendAction(\'higher\'); return false;" ' + (revealed ? 'disabled' : '') + '>Higher</button>';
+        html += '<button class="btn btn-primary" onclick="window.sendAction(\'lower\'); return false;" ' + (revealed ? 'disabled' : '') + '>Lower</button>';
+        html += '<button class="btn btn-outline-primary" onclick="window.sendAction(\'next\'); return false;" ' + (!revealed ? 'disabled' : '') + '>Next</button>';
+        html += '</div></div>';
+
+        container.innerHTML = html;
+    }
+
+    function renderMemoryMatch(container, gameData, state) {
+        const cards = gameData.cards || [];
+        const revealed = (gameData.revealed || []).map(x => parseInt(x, 10));
+        const matched = (gameData.matched || []).map(x => parseInt(x, 10));
+        const moves = gameData.moves ?? 0;
+        const message = gameData.message || '';
+
+        let html = '<div class="d-flex flex-column align-items-center gap-3">';
+        html += '<div class="text-center">';
+        html += '<div class="fw-bold">Memory Match</div>';
+        html += '<div class="text-muted">Moves ' + moves + ' • Matched ' + (matched.length / 2) + '/8</div>';
+        html += '</div>';
+
+        if (message) {
+            html += '<div class="alert alert-info py-2 px-3 text-center" style="max-width:520px;">' + message + '</div>';
+        }
+
+        html += '<div style="display:grid;grid-template-columns:repeat(4,84px);gap:10px;">';
+        for (let i = 0; i < 16; i++) {
+            const isMatched = matched.includes(i);
+            const isRevealed = revealed.includes(i);
+            const show = isMatched || isRevealed;
+            const label = show ? (cards[i] ?? '') : '';
+            const disabled = isMatched || revealed.length >= 2;
+
+            html += '<button class="btn ' + (show ? 'btn-success' : 'btn-outline-secondary') + '" ';
+            html += 'style="width:84px;height:84px;font-size:1.5rem;" ';
+            html += 'onclick="window.sendAction(\'flip_' + i + '\'); return false;" ';
+            html += (disabled ? 'disabled' : '') + '>';
+            html += (label !== '' ? label : '&nbsp;');
+            html += '</button>';
+        }
+        html += '</div>';
+
+        html += '<div class="d-flex gap-2 mt-2">';
+        html += '<button class="btn btn-outline-primary" onclick="window.sendAction(\'next\'); return false;" ' + (revealed.length < 2 ? 'disabled' : '') + '>Next</button>';
+        html += '</div></div>';
+
+        container.innerHTML = html;
+    }
+
+
+    // Auto-update game state
+    function pollGameState() {
+        if (!currentGameState || currentGameState.Status === 'GameOver' || currentGameState.Status === 'Won') {
+            console.log('pollGameState: Game already ended, skipping poll');
+            return;
+        }
+
+        // Vérifier que le GameId est valide avant de faire l'appel
+        if (!currentGameState.GameId || currentGameState.GameId <= 0) {
+            console.error('pollGameState: Invalid GameId:', currentGameState?.GameId, 'Full state:', currentGameState);
+            if (gameLoopInterval) {
+                clearInterval(gameLoopInterval);
+                gameLoopInterval = null;
+            }
+            document.getElementById('gameContent').innerHTML = 
+                '<div class="alert alert-danger">Error: Invalid game ID (' + (currentGameState?.GameId || 'null') + '). Please restart the game.</div>';
+            return;
+        }
+
+        const gameIdToUse = currentGameState.GameId;
+        console.log('pollGameState: Polling game state for GameId:', gameIdToUse);
+
+        fetch('/Home/GetGameState?gameId=' + gameIdToUse + '&playerId=' + playerId)
+            .then(response => response.json())
+            .then(data => {
+                console.log('pollGameState: Received data:', data);
+                
+                // Vérifier si le jeu est terminé ou inconnu
+                if (data.error || data.GameType === 'unknown' || (data.Status === 'GameOver' && data.GameId === 0)) {
+                    console.log('pollGameState: Game ended or error:', data);
+                    if (gameLoopInterval) {
+                        clearInterval(gameLoopInterval);
+                        gameLoopInterval = null;
+                    }
+                    if (data.error) {
+                        document.getElementById('gameContent').innerHTML = 
+                            '<div class="alert alert-warning">' + (data.error || 'Game session expired') + '</div>';
+                    }
+                    return;
+                }
+                
+                // Mettre à jour seulement si le GameId est valide
+                // Preserve the original gameId if the response has an invalid one
+                const originalGameId = currentGameState?.GameId || initialGameId;
+                
+                // Handle both camelCase and PascalCase property names
+                let responseGameId = data.GameId || data.gameId;
+                
+                if (!responseGameId || responseGameId <= 0) {
+                    // Use fallbacks: originalGameId, initialGameId, or gameIdToUse
+                    if (originalGameId && originalGameId > 0) {
+                        console.warn('pollGameState: Response has invalid GameId, using originalGameId:', originalGameId);
+                        responseGameId = originalGameId;
+                    } else if (initialGameId && initialGameId > 0) {
+                        console.warn('pollGameState: Response has invalid GameId, using initialGameId:', initialGameId);
+                        responseGameId = initialGameId;
+                    } else if (gameIdToUse && gameIdToUse > 0) {
+                        console.warn('pollGameState: Response has invalid GameId, using gameIdToUse:', gameIdToUse);
+                        responseGameId = gameIdToUse;
+                    } else {
+                        console.error('pollGameState: All gameIds are invalid - originalGameId:', originalGameId, 'initialGameId:', initialGameId, 'gameIdToUse:', gameIdToUse);
+                        return;
+                    }
+                }
+                
+                // Update initialGameId if we got a valid gameId
+                if (responseGameId > 0 && (!initialGameId || initialGameId <= 0)) {
+                    initialGameId = responseGameId;
+                    console.log('pollGameState: Updated initialGameId to:', initialGameId);
+                }
+                
+                // Handle both camelCase and PascalCase property names
+                const status = data.Status || data.status;
+                const gameType = data.GameType || data.gameType;
+                const score = data.Score !== undefined ? data.Score : (data.score !== undefined ? data.score : 0);
+                const level = data.Level !== undefined ? data.Level : (data.level !== undefined ? data.level : 1);
+                const gameDataJson = data.GameDataJson || data.gameDataJson;
+                
+                console.log('pollGameState: Parsed data - Status:', status, 'GameType:', gameType, 'Score:', score, 'Level:', level, 'GameDataJson length:', gameDataJson?.length || 0);
+                
+                // Preserve all fields including Status
+                currentGameState = {
+                    GameId: responseGameId,
+                    GameType: gameType || currentGameState?.GameType || 'connectfour',
+                    Status: status || currentGameState?.Status || 'Playing',
+                    Score: score,
+                    Level: level,
+                    GameDataJson: gameDataJson || currentGameState?.GameDataJson || '{}'
+                };
+                console.log('pollGameState: Updated currentGameState - GameId:', currentGameState.GameId, 'Status:', currentGameState.Status, 'GameType:', currentGameState.GameType, 'GameDataJson:', currentGameState.GameDataJson);
+                updateGameDisplay();
+            })
+            .catch(error => {
+                console.error('Error polling game state:', error);
+                // Ne pas arrêter le polling immédiatement, juste logger l'erreur
+                // Le polling continuera au prochain intervalle
+            });
+    }
+
+    // Initial render
+    console.log('Initial gameState:', gameState);
+    console.log('Initial gameState.GameId:', gameState?.GameId);
+    
+    if (gameState && gameState !== null && gameState.GameId && gameState.GameId > 0) {
+        console.log('Initializing game with state:', gameState);
+        console.log('GameId:', gameState.GameId, 'GameType:', gameState.GameType, 'Status:', gameState.Status);
+        
+        // S'assurer que le GameId est valide
+        if (!gameState.GameId || gameState.GameId <= 0) {
+            console.error('Invalid GameId in initial state:', gameState.GameId);
+            const gameContent = document.getElementById('gameContent');
+            if (gameContent) {
+                gameContent.innerHTML = '<div class="alert alert-danger">Error: Invalid game ID. Please try again.</div>';
+            }
+        } else {
+            // Ensure Status is set correctly - default to "Playing" if missing or "Loading"
+            if (!gameState.Status || gameState.Status === 'Loading' || gameState.Status.trim() === '') {
+                console.log('Initial gameState: Status was "' + gameState.Status + '", setting to "Playing"');
+                gameState.Status = 'Playing';
+            }
+            
+            currentGameState = gameState;
+            
+            // Stocker le GameId initial pour référence
+            initialGameId = gameState.GameId;
+            console.log('Stored initial GameId:', initialGameId);
+            console.log('Initial gameState.GameDataJson:', gameState.GameDataJson);
+            console.log('Initial gameState.GameType:', gameState.GameType);
+            console.log('Initial gameState.Status:', gameState.Status);
+            
+            // Vérifier que le container existe
+            const container = document.getElementById('gameContent');
+            if (!container) {
+                console.error('ERROR: gameContent container not found!');
+            } else {
+                console.log('gameContent container found, calling updateGameDisplay');
+            }
+            
+            // Wait for DOM to be ready, then render
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => {
+                    console.log('DOM loaded, calling updateGameDisplay');
+                    updateGameDisplay();
+                    // Force render after a short delay
+                    setTimeout(() => {
+                        const gameContent = document.getElementById('gameContent');
+                        if (gameContent && (!gameContent.innerHTML || gameContent.innerHTML.trim() === '')) {
+                            console.warn('gameContent is empty after updateGameDisplay, forcing render');
+                            renderGame();
+                        }
+                    }, 200);
+                });
+            } else {
+                console.log('DOM already ready, calling updateGameDisplay');
+                updateGameDisplay();
+                // Force render after a short delay
+                setTimeout(() => {
+                    const gameContent = document.getElementById('gameContent');
+                    if (gameContent && (!gameContent.innerHTML || gameContent.innerHTML.trim() === '')) {
+                        console.warn('gameContent is empty after updateGameDisplay, forcing render');
+                        renderGame();
+                    }
+                }, 200);
+            }
+            
+            // Start game loop
+            gameLoopInterval = setInterval(() => {
+                // Vérifier que currentGameState existe et a un GameId valide
+                if (!currentGameState || !currentGameState.GameId || currentGameState.GameId <= 0) {
+                    console.error('pollGameState: Invalid currentGameState or GameId:', currentGameState);
+                    if (gameLoopInterval) {
+                        clearInterval(gameLoopInterval);
+                        gameLoopInterval = null;
+                    }
+                } else if (currentGameState.Status !== 'GameOver' && currentGameState.Status !== 'Won') {
+                    pollGameState();
+                } else {
+                    console.log('Game ended, stopping polling. Status:', currentGameState.Status);
+                    if (gameLoopInterval) {
+                        clearInterval(gameLoopInterval);
+                        gameLoopInterval = null;
+                    }
+                }
+            }, 1000); // Update every 1 second
+        }
+    } else {
+        console.error('GameState is null, undefined, or invalid:', gameState);
+        console.error('GameId value:', gameState?.GameId);
+        document.getElementById('gameContent').innerHTML = '<div class="alert alert-danger">Error: Game state not available. GameId=' + (gameState?.GameId || 'null') + '. Please try again.</div>';
+    }
+</script>

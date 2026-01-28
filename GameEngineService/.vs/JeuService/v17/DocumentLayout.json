@@ -1,0 +1,197 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\rguig\\OneDrive\\Desktop\\exercice school\\dotnet\\webservice\\GamingEStoreSolution\\JeuService\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{3A16A3C9-B254-43F3-9BE9-3FA1CF651064}|JeuService\\JeuService.csproj|c:\\users\\rguig\\onedrive\\desktop\\exercice school\\dotnet\\webservice\\gamingestoresolution\\jeuservice\\jeuservice\\soap\\jeuservicesoap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3A16A3C9-B254-43F3-9BE9-3FA1CF651064}|JeuService\\JeuService.csproj|solutionrelative:jeuservice\\soap\\jeuservicesoap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A16A3C9-B254-43F3-9BE9-3FA1CF651064}|JeuService\\JeuService.csproj|c:\\users\\rguig\\onedrive\\desktop\\exercice school\\dotnet\\webservice\\gamingestoresolution\\jeuservice\\jeuservice\\soap\\ijeuservicesoap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3A16A3C9-B254-43F3-9BE9-3FA1CF651064}|JeuService\\JeuService.csproj|solutionrelative:jeuservice\\soap\\ijeuservicesoap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A16A3C9-B254-43F3-9BE9-3FA1CF651064}|JeuService\\JeuService.csproj|c:\\users\\rguig\\onedrive\\desktop\\exercice school\\dotnet\\webservice\\gamingestoresolution\\jeuservice\\jeuservice\\services\\jeuservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3A16A3C9-B254-43F3-9BE9-3FA1CF651064}|JeuService\\JeuService.csproj|solutionrelative:jeuservice\\services\\jeuservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A16A3C9-B254-43F3-9BE9-3FA1CF651064}|JeuService\\JeuService.csproj|c:\\users\\rguig\\onedrive\\desktop\\exercice school\\dotnet\\webservice\\gamingestoresolution\\jeuservice\\jeuservice\\services\\ijeuservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3A16A3C9-B254-43F3-9BE9-3FA1CF651064}|JeuService\\JeuService.csproj|solutionrelative:jeuservice\\services\\ijeuservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A16A3C9-B254-43F3-9BE9-3FA1CF651064}|JeuService\\JeuService.csproj|c:\\users\\rguig\\onedrive\\desktop\\exercice school\\dotnet\\webservice\\gamingestoresolution\\jeuservice\\jeuservice\\services\\igamestoreclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3A16A3C9-B254-43F3-9BE9-3FA1CF651064}|JeuService\\JeuService.csproj|solutionrelative:jeuservice\\services\\igamestoreclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A16A3C9-B254-43F3-9BE9-3FA1CF651064}|JeuService\\JeuService.csproj|c:\\users\\rguig\\onedrive\\desktop\\exercice school\\dotnet\\webservice\\gamingestoresolution\\jeuservice\\jeuservice\\services\\igameengine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3A16A3C9-B254-43F3-9BE9-3FA1CF651064}|JeuService\\JeuService.csproj|solutionrelative:jeuservice\\services\\igameengine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A16A3C9-B254-43F3-9BE9-3FA1CF651064}|JeuService\\JeuService.csproj|c:\\users\\rguig\\onedrive\\desktop\\exercice school\\dotnet\\webservice\\gamingestoresolution\\jeuservice\\jeuservice\\services\\gamestoreclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3A16A3C9-B254-43F3-9BE9-3FA1CF651064}|JeuService\\JeuService.csproj|solutionrelative:jeuservice\\services\\gamestoreclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A16A3C9-B254-43F3-9BE9-3FA1CF651064}|JeuService\\JeuService.csproj|c:\\users\\rguig\\onedrive\\desktop\\exercice school\\dotnet\\webservice\\gamingestoresolution\\jeuservice\\jeuservice\\services\\gameengine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3A16A3C9-B254-43F3-9BE9-3FA1CF651064}|JeuService\\JeuService.csproj|solutionrelative:jeuservice\\services\\gameengine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A16A3C9-B254-43F3-9BE9-3FA1CF651064}|JeuService\\JeuService.csproj|c:\\users\\rguig\\onedrive\\desktop\\exercice school\\dotnet\\webservice\\gamingestoresolution\\jeuservice\\jeuservice\\models\\gamestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3A16A3C9-B254-43F3-9BE9-3FA1CF651064}|JeuService\\JeuService.csproj|solutionrelative:jeuservice\\models\\gamestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A16A3C9-B254-43F3-9BE9-3FA1CF651064}|JeuService\\JeuService.csproj|c:\\users\\rguig\\onedrive\\desktop\\exercice school\\dotnet\\webservice\\gamingestoresolution\\jeuservice\\jeuservice\\models\\developedgame.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3A16A3C9-B254-43F3-9BE9-3FA1CF651064}|JeuService\\JeuService.csproj|solutionrelative:jeuservice\\models\\developedgame.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A16A3C9-B254-43F3-9BE9-3FA1CF651064}|JeuService\\JeuService.csproj|c:\\users\\rguig\\onedrive\\desktop\\exercice school\\dotnet\\webservice\\gamingestoresolution\\jeuservice\\jeuservice\\models\\injurystatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3A16A3C9-B254-43F3-9BE9-3FA1CF651064}|JeuService\\JeuService.csproj|solutionrelative:jeuservice\\models\\injurystatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "IJeuService.cs",
+              "DocumentMoniker": "C:\\Users\\rguig\\OneDrive\\Desktop\\exercice school\\dotnet\\webservice\\GamingEStoreSolution\\JeuService\\JeuService\\Services\\IJeuService.cs",
+              "RelativeDocumentMoniker": "JeuService\\Services\\IJeuService.cs",
+              "ToolTip": "C:\\Users\\rguig\\OneDrive\\Desktop\\exercice school\\dotnet\\webservice\\GamingEStoreSolution\\JeuService\\JeuService\\Services\\IJeuService.cs",
+              "RelativeToolTip": "JeuService\\Services\\IJeuService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-11T22:10:10.083Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "JeuServiceSOAP.cs",
+              "DocumentMoniker": "C:\\Users\\rguig\\OneDrive\\Desktop\\exercice school\\dotnet\\webservice\\GamingEStoreSolution\\JeuService\\JeuService\\SOAP\\JeuServiceSOAP.cs",
+              "RelativeDocumentMoniker": "JeuService\\SOAP\\JeuServiceSOAP.cs",
+              "ToolTip": "C:\\Users\\rguig\\OneDrive\\Desktop\\exercice school\\dotnet\\webservice\\GamingEStoreSolution\\JeuService\\JeuService\\SOAP\\JeuServiceSOAP.cs",
+              "RelativeToolTip": "JeuService\\SOAP\\JeuServiceSOAP.cs",
+              "ViewState": "AgIAAA0BAAAAAAAAAIAwwBEBAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-11T19:30:26.648Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "JeuService.cs",
+              "DocumentMoniker": "C:\\Users\\rguig\\OneDrive\\Desktop\\exercice school\\dotnet\\webservice\\GamingEStoreSolution\\JeuService\\JeuService\\Services\\JeuService.cs",
+              "RelativeDocumentMoniker": "JeuService\\Services\\JeuService.cs",
+              "ToolTip": "C:\\Users\\rguig\\OneDrive\\Desktop\\exercice school\\dotnet\\webservice\\GamingEStoreSolution\\JeuService\\JeuService\\Services\\JeuService.cs",
+              "RelativeToolTip": "JeuService\\Services\\JeuService.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAAAYwD4AAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-11T22:10:15.386Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "IGameStoreClient.cs",
+              "DocumentMoniker": "C:\\Users\\rguig\\OneDrive\\Desktop\\exercice school\\dotnet\\webservice\\GamingEStoreSolution\\JeuService\\JeuService\\Services\\IGameStoreClient.cs",
+              "RelativeDocumentMoniker": "JeuService\\Services\\IGameStoreClient.cs",
+              "ToolTip": "C:\\Users\\rguig\\OneDrive\\Desktop\\exercice school\\dotnet\\webservice\\GamingEStoreSolution\\JeuService\\JeuService\\Services\\IGameStoreClient.cs",
+              "RelativeToolTip": "JeuService\\Services\\IGameStoreClient.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-11T22:10:06.369Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "IJeuServiceSOAP.cs",
+              "DocumentMoniker": "C:\\Users\\rguig\\OneDrive\\Desktop\\exercice school\\dotnet\\webservice\\GamingEStoreSolution\\JeuService\\JeuService\\SOAP\\IJeuServiceSOAP.cs",
+              "RelativeDocumentMoniker": "JeuService\\SOAP\\IJeuServiceSOAP.cs",
+              "ToolTip": "C:\\Users\\rguig\\OneDrive\\Desktop\\exercice school\\dotnet\\webservice\\GamingEStoreSolution\\JeuService\\JeuService\\SOAP\\IJeuServiceSOAP.cs",
+              "RelativeToolTip": "JeuService\\SOAP\\IJeuServiceSOAP.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-11T22:12:20.531Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "IGameEngine.cs",
+              "DocumentMoniker": "C:\\Users\\rguig\\OneDrive\\Desktop\\exercice school\\dotnet\\webservice\\GamingEStoreSolution\\JeuService\\JeuService\\Services\\IGameEngine.cs",
+              "RelativeDocumentMoniker": "JeuService\\Services\\IGameEngine.cs",
+              "ToolTip": "C:\\Users\\rguig\\OneDrive\\Desktop\\exercice school\\dotnet\\webservice\\GamingEStoreSolution\\JeuService\\JeuService\\Services\\IGameEngine.cs",
+              "RelativeToolTip": "JeuService\\Services\\IGameEngine.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-11T22:10:02.501Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "GameStoreClient.cs",
+              "DocumentMoniker": "C:\\Users\\rguig\\OneDrive\\Desktop\\exercice school\\dotnet\\webservice\\GamingEStoreSolution\\JeuService\\JeuService\\Services\\GameStoreClient.cs",
+              "RelativeDocumentMoniker": "JeuService\\Services\\GameStoreClient.cs",
+              "ToolTip": "C:\\Users\\rguig\\OneDrive\\Desktop\\exercice school\\dotnet\\webservice\\GamingEStoreSolution\\JeuService\\JeuService\\Services\\GameStoreClient.cs",
+              "RelativeToolTip": "JeuService\\Services\\GameStoreClient.cs",
+              "ViewState": "AgIAAGQAAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-11T22:09:47.282Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "GameEngine.cs",
+              "DocumentMoniker": "C:\\Users\\rguig\\OneDrive\\Desktop\\exercice school\\dotnet\\webservice\\GamingEStoreSolution\\JeuService\\JeuService\\Services\\GameEngine.cs",
+              "RelativeDocumentMoniker": "JeuService\\Services\\GameEngine.cs",
+              "ToolTip": "C:\\Users\\rguig\\OneDrive\\Desktop\\exercice school\\dotnet\\webservice\\GamingEStoreSolution\\JeuService\\JeuService\\Services\\GameEngine.cs",
+              "RelativeToolTip": "JeuService\\Services\\GameEngine.cs",
+              "ViewState": "AgIAAHwBAAAAAAAAAAAmwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-11T22:09:13.47Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "InjuryStatus.cs",
+              "DocumentMoniker": "C:\\Users\\rguig\\OneDrive\\Desktop\\exercice school\\dotnet\\webservice\\GamingEStoreSolution\\JeuService\\JeuService\\Models\\InjuryStatus.cs",
+              "RelativeDocumentMoniker": "JeuService\\Models\\InjuryStatus.cs",
+              "ToolTip": "C:\\Users\\rguig\\OneDrive\\Desktop\\exercice school\\dotnet\\webservice\\GamingEStoreSolution\\JeuService\\JeuService\\Models\\InjuryStatus.cs",
+              "RelativeToolTip": "JeuService\\Models\\InjuryStatus.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-11T22:08:57.448Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "GameState.cs",
+              "DocumentMoniker": "C:\\Users\\rguig\\OneDrive\\Desktop\\exercice school\\dotnet\\webservice\\GamingEStoreSolution\\JeuService\\JeuService\\Models\\GameState.cs",
+              "RelativeDocumentMoniker": "JeuService\\Models\\GameState.cs",
+              "ToolTip": "C:\\Users\\rguig\\OneDrive\\Desktop\\exercice school\\dotnet\\webservice\\GamingEStoreSolution\\JeuService\\JeuService\\Models\\GameState.cs",
+              "RelativeToolTip": "JeuService\\Models\\GameState.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-11T22:08:42.975Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "DevelopedGame.cs",
+              "DocumentMoniker": "C:\\Users\\rguig\\OneDrive\\Desktop\\exercice school\\dotnet\\webservice\\GamingEStoreSolution\\JeuService\\JeuService\\Models\\DevelopedGame.cs",
+              "RelativeDocumentMoniker": "JeuService\\Models\\DevelopedGame.cs",
+              "ToolTip": "C:\\Users\\rguig\\OneDrive\\Desktop\\exercice school\\dotnet\\webservice\\GamingEStoreSolution\\JeuService\\JeuService\\Models\\DevelopedGame.cs",
+              "RelativeToolTip": "JeuService\\Models\\DevelopedGame.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-11T22:08:40.144Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+/* Layout styling */
+
+:root {
+  --app-bg: #0b1220;
+  --app-surface: rgba(255, 255, 255, 0.06);
+  --app-border: rgba(255, 255, 255, 0.10);
+  --app-text: rgba(255, 255, 255, 0.92);
+  --app-muted: rgba(255, 255, 255, 0.70);
+  --app-accent: #22c55e;
+}
+
+body {
+  background:
+    radial-gradient(900px 500px at 10% 0%, rgba(34, 197, 94, 0.18), transparent 60%),
+    radial-gradient(800px 450px at 90% 10%, rgba(59, 130, 246, 0.14), transparent 55%),
+    var(--app-bg);
+  color: var(--app-text);
+}
+
+.container, .container-fluid {
+  color: var(--app-text);
+}
+
+.app-navbar {
+  background: linear-gradient(90deg, rgba(15, 23, 42, 0.92), rgba(2, 6, 23, 0.92));
+  border-bottom: 1px solid var(--app-border);
+  backdrop-filter: blur(10px);
+}
+
+.app-navbar .navbar-brand {
+  white-space: normal;
+  letter-spacing: 0.2px;
+}
+
+.app-navbar .nav-link {
+  color: var(--app-muted);
+}
+
+.app-navbar .nav-link:hover,
+.app-navbar .nav-link:focus {
+  color: var(--app-text);
+}
+
+a {
+  color: #93c5fd;
+}
+
+a:hover {
+  color: #bfdbfe;
+}
+
+.card {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 16px;
+}
+
+.card-header {
+  background: transparent;
+  border-bottom: 1px solid var(--app-border);
+}
+
+.btn-primary {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+.btn-success {
+  background-color: var(--app-accent);
+  border-color: var(--app-accent);
+}
+
+.btn-outline-success {
+  color: var(--app-accent);
+  border-color: rgba(34, 197, 94, 0.55);
+}
+
+.btn-outline-success:hover {
+  background-color: rgba(34, 197, 94, 0.12);
+}
+
+.text-muted {
+  color: var(--app-muted) !important;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px;
+}

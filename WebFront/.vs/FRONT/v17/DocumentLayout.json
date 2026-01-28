@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\rguig\\OneDrive\\Desktop\\exercice school\\dotnet\\webservice\\GamingEStoreSolution\\FRONT\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{B77DA725-0FCC-430D-BA05-B0729DC6F6A9}|FRONT\\FRONT.csproj|c:\\users\\rguig\\onedrive\\desktop\\exercice school\\dotnet\\webservice\\gamingestoresolution\\front\\front\\views\\home\\categories.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B77DA725-0FCC-430D-BA05-B0729DC6F6A9}|FRONT\\FRONT.csproj|solutionrelative:front\\views\\home\\categories.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Categories.cshtml",
+              "DocumentMoniker": "C:\\Users\\rguig\\OneDrive\\Desktop\\exercice school\\dotnet\\webservice\\GamingEStoreSolution\\FRONT\\FRONT\\Views\\Home\\Categories.cshtml",
+              "RelativeDocumentMoniker": "FRONT\\Views\\Home\\Categories.cshtml",
+              "ToolTip": "C:\\Users\\rguig\\OneDrive\\Desktop\\exercice school\\dotnet\\webservice\\GamingEStoreSolution\\FRONT\\FRONT\\Views\\Home\\Categories.cshtml",
+              "RelativeToolTip": "FRONT\\Views\\Home\\Categories.cshtml",
+              "ViewState": "AgIAACUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-24T13:47:14.062Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
